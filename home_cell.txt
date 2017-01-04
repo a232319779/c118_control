@@ -1,0 +1,16 @@
+Copyright (C) 2010 Andreas Eversberg
+
+License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Mobile initialized, please start phone now!
+Dropping frame with 82 bit errors
+Dropping frame with 76 bit errors
+Dropping frame with 81 bit errors
+Dropping frame with 83 bit errors
+Dropping frame with 71 bit errors
+Dropping frame with 82 bit errors
+Dropping frame with 78 bit errors
+Dropping frame with 74 bit errors
+Dropping frame with 82 bit errors
