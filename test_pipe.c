@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <fcntl.h>
-#include <errno.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 #include "burst_desc.h"
 
@@ -15,7 +16,6 @@ int main(int argc, char *argv[])
     //fp = fopen(argv[1], "rb");
     fp = fopen("bursts_20161128_2048_576_764981_0f.dat", "rb");
     pipe_wd = open("/tmp/gprs_fifo", O_WRONLY);
-    printf ("pFile error: %s\n",strerror(errno));
 
     int count = 0;
     while(!feof(fp))
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	printf("bi : %u\tcount : %d\n", bi.frame_nr, count++);
     }
     close(pipe_wd);
-    close(fp);
+    fclose(fp);
 
     return 0;
 }
