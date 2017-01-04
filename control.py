@@ -21,9 +21,9 @@ def getUSB():
 def download(usb_list) :
     for usb in usb_list :
         dev = usb[-4:]
-        down_cmd = "sudo /home/newsun/GSM/control_python/c118/osmocon -m  \
+        down_cmd = "sudo /home/newsun/GSM/c118_control/c118/osmocon -m  \
         c123xor -p %s -s /tmp/osmocom_l2_%s \
-        /home/newsun/GSM/control_python/c118/layer1.compalram.bin" % (usb, dev)
+        /home/newsun/GSM/c118_control/c118/layer1.compalram.bin" % (usb, dev)
         try :
             downloadCommand = ['gnome-terminal', '-t', 'osmocom for ' + dev,'-e',\
                               down_cmd]
@@ -42,7 +42,7 @@ def sniffer(usb_list,port_list) :
         l = lu
     for i in range(0, l) :
         dev = usb_list[i][-4:]
-        sniffer_cmd = "sudo /home/newsun/GSM/control_python/c118/ccch_scan -a %s -s /tmp/osmocom_l2_%s" % (port_list[i], dev)
+        sniffer_cmd = "sudo /home/newsun/GSM/c118_control/c118/ccch_scan -a %s -s /tmp/osmocom_l2_%s" % (port_list[i], dev)
         sniffer_command = ['gnome-terminal', '-e', sniffer_cmd]
         try :
             snifferProcess = subprocess.Popen(sniffer_command,
@@ -53,7 +53,7 @@ def sniffer(usb_list,port_list) :
 
 def gprsdecode(file_list):
     for file_name in file_list :
-        file_cmd = "sudo /home/newsun/GSM/control_python/c118/gprsdecode %s" % file_name
+        file_cmd = "sudo /home/newsun/GSM/c118_control/c118/gprsdecode %s" % file_name
         file_command = ['gnome-terminal', '-e', file_cmd]
         try :
             fileProcess = subprocess.Popen(file_command,
