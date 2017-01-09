@@ -145,7 +145,7 @@ class control_c118(object) :
         '''
         kill all processes.
         '''
-        cmd = 'sudo killall ccch_scan cell_log gprsdeocde 2>/dev/null'
+        cmd = 'sudo killall ccch_scan cell_log gprsdecode 2>/dev/null'
         lay23_proc = self.runCommand2(cmd)
         lay23_proc.wait()
         cmd = 'sudo killall osmocon 2>/dev/null'
