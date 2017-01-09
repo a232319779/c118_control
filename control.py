@@ -26,25 +26,14 @@ class control_c118(object) :
         self.terminal.append(cmd)
         return self.terminal
 
-    def runCommand(self, cmd) :
+    def runCommand(self, cmd, shell = False) :
         '''
-        start a new terminal.
-        '''
-        sub = None
-        try :
-            sub = subprocess.Popen(cmd, stderr = subprocess.PIPE, stdout = subprocess.PIPE)
-        except Exception, e:
-            print "error : %s" % str(e)
-
-        return sub
-
-    def runCommand2(self, cmd) :
-        '''
-        run shell command.
+        if shell is False, start a new terminal.
+        else run as shell.
         '''
         sub = None
         try :
-            sub = subprocess.Popen(cmd, shell = True, stdout = subprocess.PIPE)
+            sub = subprocess.Popen(cmd, shell = shell, stderr = subprocess.PIPE, stdout = subprocess.PIPE)
         except Exception, e:
             print "error : %s" % str(e)
 
@@ -57,7 +46,7 @@ class control_c118(object) :
         usblist = []
         
         cmd = 'ls /dev | grep ttyUSB'
-        subpro2 = self.runCommand2(cmd) 
+        subpro2 = self.runCommand(cmd, True) 
         subpro2.wait()
         ttylog = subpro2.communicate()
 
@@ -146,17 +135,17 @@ class control_c118(object) :
         kill all processes.
         '''
         cmd = 'sudo killall ccch_scan cell_log gprsdecode 2>/dev/null'
-        lay23_proc = self.runCommand2(cmd)
+        lay23_proc = self.runCommand(cmd, True)
         lay23_proc.wait()
         cmd = 'sudo killall osmocon 2>/dev/null'
-        osmc_proc = self.runCommand2(cmd) 
+        osmc_proc = self.runCommand(cmd, True) 
 
     def removeData(self):
         '''
         remove the all data file.
         '''
         cmd = 'sudo rm *.dat'
-        rmproc = self.runCommand2(cmd)
+        rmproc = self.runCommand(cmd, True)
 
 def usage():
     print '''
