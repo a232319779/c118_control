@@ -1,5 +1,5 @@
 bin_path=./c118
-osmocombb_path=~/GSM/osmocombb_gprs_sniffer_real_time
+osmocombb_path=~/GSM/GPRS-real-time-sniffer
 
 if [ ! -x $bin_path ];then
     mkdir $bin_path
