@@ -75,7 +75,7 @@ class control_c118(object) :
 
     def sniffer(self, args) :
         '''
-        start sniffer the port.
+        start sniffer the arfcn.
         '''
         try :
             t_opts, t_args = getopt.getopt(args, 'hf:p:', ['help', 'flag=', 'pipe='])
