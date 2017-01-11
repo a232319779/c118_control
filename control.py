@@ -59,18 +59,19 @@ class control_c118(object) :
 
         return usblist
 
-    def download(self, usb_list = None) :
+    def download(self) :
         '''
         download the rom to the mobile.
         '''
-        if usb_list is None :
-            usb_list = self.usbs
+        usb_list = self.usbs
         for usb in usb_list :
             dev = usb[-4:]
             down_cmd = "sudo %s/c118/osmocon -m c123xor -p %s -s /tmp/osmocom_l2_%s %s/c118/layer1.compalram.bin"  % (self.current_path, usb, dev, self.current_path)
+            print down_cmd
             self.setTerminalName('osmocon for ' + dev)
             cmd = self.getTerminalCommand(down_cmd)
-            downloadprocess = self.runCommand(cmd) 
+            #downloadprocess = self.runCommand(cmd)
+            subprocess.Popen(cmd)
             time.sleep(1)
         return 0 
 
@@ -78,16 +79,23 @@ class control_c118(object) :
         '''
         start sniffer the port.
         '''
+        try :
+            t_opts, t_args = getopt.getopt(args, 'hf:p:', ['help', 'flag=', 'pipe='])
+        except Exception, e:
+            print "sniffer parse param failed."
+            return -1
+        append_param = ""
+        if len(t_opts) != 0 :
+            append_param = " ".join(t_opts[0])  # just use first param.Also in ccch_scan
         usb_list = self.usbs
         lu = len(usb_list)
-        lp = len(args)
+        lp = len(t_args)
         l = lp
         if lu < lp :
             l = lu
         for i in range(0, l) :
             dev = usb_list[i][-4:]
-            sniffer_cmd = "sudo %s/c118/ccch_scan -a %s -s /tmp/osmocom_l2_%s" % (self.current_path, args[i], dev)
-            print sniffer_cmd
+            sniffer_cmd = "sudo %s/c118/ccch_scan %s -a %s -s /tmp/osmocom_l2_%s" % (self.current_path, append_param, t_args[i], dev)
             self.setTerminalName('sniffer for %s' % args[i])
             cmd = self.getTerminalCommand(sniffer_cmd)
             snifferprocess = self.runCommand(cmd) 
@@ -113,6 +121,7 @@ class control_c118(object) :
         wire_cmd = "sudo wireshark -k -i lo -c \'port 4729\'"
         self.setTerminalName('start wiershark')
         cmd = self.getTerminalCommand(wire_cmd)
+        print wire_cmd
         wiresharkprocess = self.runCommand(cmd)
 
         return 0
@@ -147,8 +156,8 @@ def usage():
         kill : stop the all process.
         rm : remove the all data file.
         use like :  sudo python control.py -c down
-                    sudo python control.py -c sniff [arfcn arfcn ...]
-                    sudo python control.py -c gprs [opt ...]
+                    sudo python control.py -c sniff [-f 1 47 56 ...]
+                    sudo python control.py -c gprs [-f data.dat]
                     sudo python control.py -c wireshark
                     sudo python control.py -c kill
                     sudo python control.py -c rm
@@ -175,7 +184,7 @@ def function(v, args):
     elif v == 'sniff' :
         c118.sniffer(args)
     elif v == 'gprs' :
-        c118.gprsdecode("".join(args))
+        c118.gprsdecode(" ".join(args))
     elif v == 'wireshark' :
         c118.startWireshark()
     elif v == 'kill' :
@@ -198,8 +207,8 @@ def main():
             version()
             break
         if name in ('-c', '--call') :
-            args = parse2param(args)
-            print args
+            if len(args) != 0 :
+                args = parse2param(args)
             function(value, args)
             break
 
