@@ -14,7 +14,7 @@ class control_c118(object) :
         '''
         self.current_path = path[0]
         self.usbs = self.getusb()
-        self.terminal = ['gnome-terminal', '-t', 'noname', '-e']
+        self.terminal = ['gnome-terminal', '-t', 'noname', '-e', 'nocmd']
 
     def setTerminalName(self, name) :
         '''
@@ -23,7 +23,7 @@ class control_c118(object) :
         self.terminal[2] = name
 
     def getTerminalCommand(self, cmd) :
-        self.terminal.append(cmd)
+        self.terminal[4] = cmd
         return self.terminal
 
     def runCommand(self, cmd, shell = False) :
@@ -67,11 +67,9 @@ class control_c118(object) :
         for usb in usb_list :
             dev = usb[-4:]
             down_cmd = "sudo %s/c118/osmocon -m c123xor -p %s -s /tmp/osmocom_l2_%s %s/c118/layer1.compalram.bin"  % (self.current_path, usb, dev, self.current_path)
-            print down_cmd
             self.setTerminalName('osmocon for ' + dev)
             cmd = self.getTerminalCommand(down_cmd)
-            #downloadprocess = self.runCommand(cmd)
-            subprocess.Popen(cmd)
+            downloadprocess = self.runCommand(cmd)
             time.sleep(1)
         return 0 
 
@@ -96,7 +94,7 @@ class control_c118(object) :
         for i in range(0, l) :
             dev = usb_list[i][-4:]
             sniffer_cmd = "sudo %s/c118/ccch_scan %s -a %s -s /tmp/osmocom_l2_%s" % (self.current_path, append_param, t_args[i], dev)
-            self.setTerminalName('sniffer for %s' % args[i])
+            self.setTerminalName('sniffer for %s' % t_args[i])
             cmd = self.getTerminalCommand(sniffer_cmd)
             snifferprocess = self.runCommand(cmd) 
 
@@ -107,7 +105,6 @@ class control_c118(object) :
         start decode the gprs data.
         '''
         file_cmd = "sudo %s/c118/gprsdecode %s" % (self.current_path, args)
-        print file_cmd
         self.setTerminalName('decode gprs')
         cmd = self.getTerminalCommand(file_cmd)
         fileprocess = self.runCommand(cmd)
@@ -118,10 +115,9 @@ class control_c118(object) :
         '''
         start a new wireshark to capture the mac/rlc data.
         '''
-        wire_cmd = "sudo wireshark -k -i lo -c \'port 4729\'"
+        wire_cmd = "sudo wireshark -k -i lo -f \'port 4729\'"
         self.setTerminalName('start wiershark')
         cmd = self.getTerminalCommand(wire_cmd)
-        print wire_cmd
         wiresharkprocess = self.runCommand(cmd)
 
         return 0
@@ -175,21 +171,27 @@ def parse2param(args) :
 def function(v, args):
     print '''
     call the function.
-    function : %s
+    function name : %s
     ''' % (v)
     
     c118 = control_c118()
     if v == 'down' :
+        print "function : %s" % (c118.download.__doc__)
         c118.download()
     elif v == 'sniff' :
+        print "function : %s" % (c118.sniffer.__doc__)
         c118.sniffer(args)
     elif v == 'gprs' :
+        print "function : %s" % (c118.gprsdecode.__doc__)
         c118.gprsdecode(" ".join(args))
     elif v == 'wireshark' :
+        print "function : %s" % (c118.startWireshark.__doc__)
         c118.startWireshark()
     elif v == 'kill' :
+        print "function : %s" % (c118.killAll.__doc__)
         c118.killAll()
     elif v == 'rm' :
+        print "function : %s" % (c118.removeData.__doc__)
         c118.removeData()
         
 
