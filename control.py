@@ -115,7 +115,7 @@ class control_c118(object) :
         '''
         start a new wireshark to capture the mac/rlc data.
         '''
-        wire_cmd = "sudo wireshark -k -i lo -f \'port 4729\'"
+        wire_cmd = "sudo -i wireshark -k -i lo -f \'port 4729\'"
         self.setTerminalName('start wiershark')
         cmd = self.getTerminalCommand(wire_cmd)
         wiresharkprocess = self.runCommand(cmd)
@@ -144,7 +144,7 @@ def usage():
     control.py usage:
     -h,--help : print help message
     -v,--version : print current version
-    -c,--cunction : which function could be used (down/sniff/gprs/wireshark/kill/rm)
+    -c,--call : which function could be used (down/sniff/gprs/wireshark/kill/rm)
         down : download the rom to mobile
         sniff : sniffer the ARFCN followd the sniff
         gprs : decode the signal.if nothing followd the gprs ,it could be use on real time.or the data file should be followd by gprs.
